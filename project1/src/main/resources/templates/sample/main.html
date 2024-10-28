@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- thins => th:insert="" div 사이로 들어옴-->
+    <!-- threp => th:replace=""  조각을 포함한 태그를 대체해서 들어옴-->
+    <!-- <div th:insert="~{/fragments/separate::header}"></div> -->
+    <div th:insert="~{/fragments/header::header}"></div>
+
+    <h1>Thymeleaf Layout</h1>
+    <div th:insert="~{/fragments/separate::content}"></div>
+    <!-- <div th:replace="~{/fragments/separate::footer}"></div> -->
+    <div th:replace="~{/fragments/footer::footer}"></div>
+  </body>
+</html>

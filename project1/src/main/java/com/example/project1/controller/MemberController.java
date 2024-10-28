@@ -1,21 +1,19 @@
 package com.example.project1.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.project1.dto.LoginDto;
 import com.example.project1.dto.MemberDto;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Log4j2
 @Controller
@@ -24,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MemberController {
 
   @GetMapping("/login")
-  public void getLogin() {
+  public void getLogin(LoginDto loginDto) {
     // form 양식 보여주는 용도 (페이지 요청)
-    log.info("login GET 페이지 요청");
+    log.info("login GET 페이지 요청 -> LoginDto loginDto 파라미터로 보내줌");
   }
 
   // // 첫번째 방법 : 잘 안씀
@@ -59,9 +57,14 @@ public class MemberController {
 
   // TODO: 컨트롤러 클래스에 사용가능한 어노테이션
   @PostMapping("/login")
-  public String postLogin(@ModelAttribute("login") LoginDto loginDto) {
+  public String postLogin(@Valid LoginDto loginDto, BindingResult result) {// @ModelAttribute("login")
     log.info("login POST 요청 - 사용자 입력값 요청");
     log.info("userid : {} , password {}", loginDto.getUserid(), loginDto.getPassword());
+
+    if (result.hasErrors()) {
+      log.info("로그인 시 userid 와 password 칸이 비었습니다");
+      return "/member/login";
+    }
     return "index";
   }
 
@@ -94,17 +97,20 @@ public class MemberController {
   // com.example.project1.controller.MemberController#method3() mapped.
 
   @GetMapping("/register") // TODO: /register.html
-  public void getRegister() {
+  public void getRegister(MemberDto memberDto) {
     log.info("register 요청");
   }
 
   // post // return => 로그인 페이지
   // TODO: url 주소창, a 링크로 들어가는 페이지는 모두 GET 방식; POST는 return 해줘야 갈 수 있는 페이지
   @PostMapping("/register")
-  public String postRegister(@ModelAttribute("register") MemberDto memberDto) {
-    log.info("register POST 요청 - 사용자 입력값 요청");
+  public String postRegister(@Valid MemberDto memberDto, BindingResult result) { // @ModelAttribute("register")
+    log.info("register POST 요청 - 회원가입 사용자 입력값 요청");
     log.info("userid : {} , password : {}, name : {}", memberDto.getUserid(), memberDto.getPassword(),
         memberDto.getName());
+    if (result.hasErrors()) {
+      return "/member/register";
+    }
     return "redirect:/member/login"; // TODO: redirect:/member/login => (redirect:)경로 not html
     // http://localhost:8080/login
   }

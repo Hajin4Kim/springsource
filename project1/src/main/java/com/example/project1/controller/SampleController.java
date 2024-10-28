@@ -5,17 +5,25 @@ import org.springframework.ui.Model;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.project1.dto.CalcDto;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Log4j2
 @Controller
 public class SampleController {
+
+  @GetMapping("/sample/list")
+  public void getList() {
+    log.info("list 요청");
+  }
+
+  @GetMapping("/sample/main")
+  public void getMain() {
+    log.info("main 요청");
+  }
 
   // @RequestMapping(path="/basic", method = RequestMethod.GET) //
   // http://localhost:8080/basic
@@ -58,6 +66,7 @@ public class SampleController {
     // TODO: http://localhost:8080/ex1?age=15
     rttr.addAttribute("age", 15); // redirect 시, 주소의 parameter 로 딸려 보내기
     rttr.addAttribute("name", "hong"); // redirect 시, 주소의 parameter 로 딸려 보내기
+    rttr.addFlashAttribute("addr", "seoul"); // redirect 시, 주소의 parameter 로 딸려 보내기
 
     return "redirect:/ex1";
     // 이거랑 같은거 return "redirect:/ex1?age=15&name=hong";
@@ -70,7 +79,7 @@ public class SampleController {
     // http://localhost:8080/ex1;jsessionid=64C1177F9B75F136862146C8DA990A4C
     // rttr.addFlashAttribute() == session 을 사용하는 것과 동일하나, 일시적 보관
     // TODO: addFlashAttribute: ?addr=seoul 없음
-    rttr.addFlashAttribute("addr", "hong");
+    rttr.addFlashAttribute("addr", "seoul");
     return "redirect:/ex1";
   }
 
@@ -80,9 +89,11 @@ public class SampleController {
   }
 
   @GetMapping("/sample/ex2")
-  public void getEx2() {
+  public void getEx2(String param1, String param2) {
     // void 아니면 String 만 만듬 (get)
     log.info("ex2 컨트롤러 동작");
+    log.info("{}, {}", param1, param2);
+
   }
 
   @GetMapping("/ex3")
