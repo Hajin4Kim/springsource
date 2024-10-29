@@ -5,7 +5,7 @@ public class LgTv implements TV {
   /*
    * 변수
    * 1) 멤버 변수 (Instance) : 클래스 안에 선언된 변수
-   * 객체인 경우 null 로 초기화 됨
+   * 객체인 경우 null 로 초기화 됨 // 객체타입 초기화 is null => 객체생성 해야함 (생성자 이용)
    * 기본타입 변수(float, double, int, char, boolean)인 경우: 0 or '' or 0.0 -> false 로 초기화
    * 됨
    * 
