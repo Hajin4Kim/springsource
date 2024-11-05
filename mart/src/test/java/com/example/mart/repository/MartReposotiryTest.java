@@ -6,11 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.mart.entity.constant.DeliveryStatus;
 import com.example.mart.entity.constant.OrderStatus;
+import com.example.mart.entity.item.Delivery;
 import com.example.mart.entity.item.Item;
 import com.example.mart.entity.item.Member;
 import com.example.mart.entity.item.Order;
 import com.example.mart.entity.item.OrderItem;
+import com.example.mart.entity.sports.SportsMember;
+import com.example.mart.repository.item.DeliveryRepository;
 import com.example.mart.repository.item.ItemRepository;
 import com.example.mart.repository.item.MemberRepository;
 import com.example.mart.repository.item.OrderItemRepository;
@@ -32,6 +36,9 @@ public class MartReposotiryTest {
 
   @Autowired
   private ItemRepository itemRepository;
+
+  @Autowired
+  private DeliveryRepository deliveryRepository;
 
   // Create - member
   @Test
@@ -194,5 +201,41 @@ public class MartReposotiryTest {
 
     // Member => Order 탐색 시도
     member.getOrders().forEach(order -> System.out.println(order));
+  }
+
+  // TODO: 일대일 관계 - Orders 와 Delivery
+  @Test
+  public void testDeliveryInsert() {
+
+    // 배송 정보 입력 (insert)
+    Delivery delivery = Delivery.builder()
+        .city("서울시")
+        .street("동소문로1가")
+        .zipcode("11051")
+        .deliveryStatus(DeliveryStatus.READY)
+        .build();
+    deliveryRepository.save(delivery);
+
+    // order 와 배송정보 연결 (update)
+    Order order = orderRepository.findById(2L).get();
+    order.setDelivery(delivery);
+    orderRepository.save(order);
+  }
+
+  @Test
+  public void testOrderRead() {
+    // 2L번 ORder 조회 (+ 배송정보)
+    Order order = orderRepository.findById(2L).get();
+    System.out.println(order);
+    System.out.println(order.getDelivery());
+  }
+
+  // 양방향 (배송 => 주문)
+  @Test
+  public void testDeliveryRead() {
+    // 배송정보 조회 (+order)
+    Delivery delivery = deliveryRepository.findById(1L).get();
+    System.out.println(delivery);
+    System.out.println(delivery.getOrder());
   }
 }
