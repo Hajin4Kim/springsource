@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @SequenceGenerator(name = "todo_seq_gen", sequenceName = "todo_seq", allocationSize = 1) // allocationSize = 1 씩 증가
 @DynamicInsert // TODO: Default 값에 대한 동작을 해줌 (안붙이면 Null 로 SQL에 들어감)
 @Entity(name = "todotbl")
-public class Todo {
+public class Todo extends BaseEntity {
 
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "todo_seq_gen")
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--TODO: layout을 상속받고있다는 사실 알리기-->
+<html lang="en" layout:decorate="~{/layouts/layout}">
+  <th:block layout:fragment="css">
+    <!-- 개별 페이지 css 작성 영역 -->
+    <style>
+      /* css 작성 */
+    </style>
+  </th:block>
+  <div layout:fragment="content" class="container">
+    <div class="card">
+      <h5 class="card-header">메모추가</h5>
+      <div class="card-body">
+        <form action="" method="post" th:object="${memoDto}">
+          <div class="form-floating">
+            <!-- TODO: textarea 에 rows= 안먹음 , style height 로 주기 -->
+            <!-- TODO: name= 은 Dto 명과 같은 이름으로 memoText-->
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              id="floatingTextarea"
+              style="height: 100px"
+              name="memoText"
+            ></textarea>
+            <label for="floatingTextarea">MemoText</label>
+            <div
+              th:if="${#fields.hasErrors('memoText')}"
+              th:errors="*{memoText}"
+              class="text-danger"
+            ></div>
+          </div>
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary">작성</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <th:block layout:fragment="script">
+    <!-- 개별 페이지 script 작성 영역 -->
+    <script>
+      // 스크립트 작성
+    </script>
+  </th:block>
+</html>
