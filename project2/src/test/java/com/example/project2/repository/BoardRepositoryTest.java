@@ -55,4 +55,12 @@ public class BoardRepositoryTest {
     boardRepository.deleteAll();
   }
 
+  // TODO: 쿼리 메소드 테스트
+  @Test
+  public void testTitleList() {
+    boardRepository.findByTitle("게시물20").forEach(b -> System.out.println(b));
+    boardRepository.findByTitleLike("게시물").forEach(b -> System.out.println(b));
+
+  }
+
 }
