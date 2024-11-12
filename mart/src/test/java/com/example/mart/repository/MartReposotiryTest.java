@@ -1,6 +1,8 @@
 package com.example.mart.repository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +116,23 @@ public class MartReposotiryTest {
     orderItemRepository.save(orderItem);
 
     // item 수량 감소 -> 구매함에 따라 quantity 물량 수 변경 update
+
+  }
+
+  // Create - order
+  @Test
+  public void orderItemInsertTest() {
+    Item item = itemRepository.findById(3L).get();
+    Order order = Order.builder().id(2L).build();
+    orderRepository.save(order);
+
+    OrderItem orderItem = OrderItem.builder()
+        .price(50000)
+        .count(4)
+        .order(order)
+        .item(item)
+        .build();
+    orderItemRepository.save(orderItem);
 
   }
 
@@ -262,5 +281,39 @@ public class MartReposotiryTest {
     Delivery delivery = deliveryRepository.findById(1L).get();
     System.out.println(delivery);
     System.out.println(delivery.getOrder());
+  }
+
+  // TODO: queryDSL -> QueryDslOrderRepositoryImpl
+  @Test
+  public void testMembers() {
+    System.out.println(orderRepository.members());
+  }
+
+  @Test
+  public void testItems() {
+    System.out.println(orderRepository.items());
+  }
+
+  @Test
+  public void testJoin() {
+    List<Object[]> result = orderRepository.joinTest();
+
+    for (Object[] objects : result) {
+      System.out.println(Arrays.toString(objects));
+      System.out.println((Order) objects[0]); // TODO: order 만 뽑기
+      System.out.println((Member) objects[1]); // TODO: member 만 뽑기
+      System.out.println((OrderItem) objects[2]); // TODO: OrderItem 만 뽑기
+    }
+  }
+
+  @Test
+  public void testSubQuery() {
+    List<Object[]> result = orderRepository.subQueryTest();
+    for (Object[] objects : result) {
+      System.out.println(Arrays.toString(objects));
+      System.out.println((Order) objects[0]); // TODO: order 만 뽑기
+      System.out.println((Member) objects[1]); // TODO: member 만 뽑기
+      System.out.println((Long) objects[2]); // TODO: OrderItem 만 뽑기
+    }
   }
 }

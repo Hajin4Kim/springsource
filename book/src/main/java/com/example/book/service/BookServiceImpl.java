@@ -1,13 +1,19 @@
 package com.example.book.service;
 
 import java.util.List;
-
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.book.dto.BookDto;
 import com.example.book.dto.CategoryDto;
+import com.example.book.dto.PageRequestDto;
+import com.example.book.dto.PageResultDto;
 import com.example.book.dto.PublisherDto;
 import com.example.book.entity.Book;
 import com.example.book.entity.Category;
@@ -42,9 +48,21 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public List<BookDto> getList() {
-    List<Book> result = bookRepository.findAll();
-    return result.stream().map(entity -> entityToDto(entity)).collect(Collectors.toList());
+  public PageResultDto<BookDto, Book> getList(PageRequestDto requestDto) {
+    // TODO: 페이지나누기 개념 없을 때
+    // List<Book> result = bookRepository.findAll();
+    // return result.stream().map(entity ->
+    // entityToDto(entity)).collect(Collectors.toList());
+
+    // TODO: 페이지나누기 개념 추가
+    // Pageable pageable = PageRequest.of(0, 20, Sort.by("id").descending());
+    Pageable pageable = requestDto.getPageable(Sort.by("id").descending());
+
+    Page<Book> result = bookRepository.findAll(bookRepository.makePredicate(null, null), pageable);
+
+    Function<Book, BookDto> fn = (entity -> entityToDto(entity));
+
+    return new PageResultDto<>(result, fn);
   }
 
   @Override

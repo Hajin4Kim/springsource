@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.example.book.dto.BookDto;
 import com.example.book.dto.CategoryDto;
+import com.example.book.dto.PageRequestDto;
+import com.example.book.dto.PageResultDto;
 import com.example.book.dto.PublisherDto;
 import com.example.book.entity.Book;
 import com.example.book.entity.Category;
@@ -16,7 +18,7 @@ public interface BookService {
 
   BookDto getRow(Long id); // TODO: Read one
 
-  List<BookDto> getList();// TODO: Read ALl
+  PageResultDto<BookDto, Book> getList(PageRequestDto requestDto);// TODO: Read ALl //TODO: Page나누기 개념 추가
 
   Long update(BookDto dto); // TODO: update
 
