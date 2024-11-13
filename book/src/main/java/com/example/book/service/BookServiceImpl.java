@@ -54,11 +54,11 @@ public class BookServiceImpl implements BookService {
     // return result.stream().map(entity ->
     // entityToDto(entity)).collect(Collectors.toList());
 
-    // TODO: 페이지나누기 개념 추가
+    // TODO: 페이지나누기 + 검색 개념 추가
     // Pageable pageable = PageRequest.of(0, 20, Sort.by("id").descending());
     Pageable pageable = requestDto.getPageable(Sort.by("id").descending());
-
-    Page<Book> result = bookRepository.findAll(bookRepository.makePredicate(null, null), pageable);
+    Page<Book> result = bookRepository
+        .findAll(bookRepository.makePredicate(requestDto.getType(), requestDto.getKeyword()), pageable);
 
     Function<Book, BookDto> fn = (entity -> entityToDto(entity));
 
@@ -67,6 +67,7 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public Long update(BookDto dto) {
+
     Book book = bookRepository.findById(dto.getId()).get();
     book.setPrice(dto.getPrice());
     book.setSalePrice(dto.getSalePrice());

@@ -33,9 +33,11 @@ public class BookController {
 
   private final BookService bookService;
 
+  // 리스트 추출
   @GetMapping("/list")
-  public void getList(PageRequestDto requestDto, Model model) {
-    log.info("도서 전체 목록 요청");
+  public void getList(@ModelAttribute(name = "requestDto") PageRequestDto requestDto, Model model) {
+    log.info("도서 전체 목록 요청 {}", requestDto);
+
     PageResultDto<BookDto, Book> result = bookService.getList(requestDto);
     model.addAttribute("result", result);
   }
@@ -43,25 +45,43 @@ public class BookController {
   // TODO: 상세조회 페이지
   @GetMapping(value = { "/read", "/modify" }) // TODO: id 값 넘겨서 /list 페이지에서 th:href 로 받아, controller 로 해당 id 값에 대한 동작을
                                               // 하게끔
-  public void getRead(@RequestParam Long id, Model model) {
+  public void getRead(@RequestParam Long id, @ModelAttribute(name = "requestDto") PageRequestDto requestDto,
+      Model model) {
     log.info("도서 상세 요청 {}", id);
     BookDto dto = bookService.getRow(id);
     model.addAttribute("dto", dto);
   }
 
   @PostMapping("/modify")
-  public String postModify(BookDto dto, RedirectAttributes rttr) {
+  public String postModify(BookDto dto, @ModelAttribute(name = "requestDto") PageRequestDto requestDto,
+      RedirectAttributes rttr) {
     log.info("도서 수정 요청 {}", dto);
+    log.info("requestDto {}", requestDto);
+
     Long id = bookService.update(dto); // TODO: 수정된 번호 넘겨
+
+    // TODO: 상세조회로 이동
     rttr.addAttribute("id", id); // TODO: addFlashAttribue 로 하면 없어지므로 조심
+    rttr.addAttribute("page", requestDto.getPage());
+    rttr.addAttribute("size", requestDto.getSize());
+    rttr.addAttribute("type", requestDto.getType());
+    rttr.addAttribute("keyword", requestDto.getKeyword());
     return "redirect:read";
   }
 
   @PostMapping("/remove")
-  public String getRemove(@RequestParam Long id) {
-    log.info("삭제 요청 {}", id);
+  public String getRemove(@RequestParam Long id, @ModelAttribute(name = "requestDto") PageRequestDto requestDto,
+      RedirectAttributes rttr) {
+    log.info("도서 삭제 요청 {}", id);
+    log.info("requestDto {}", requestDto);
+
     bookService.delete(id);
-    // rttr.addAttribute("id", id);
+
+    // TODO: Pagination, 검색기능 추가
+    rttr.addAttribute("page", requestDto.getPage());
+    rttr.addAttribute("size", requestDto.getSize());
+    rttr.addAttribute("type", requestDto.getType());
+    rttr.addAttribute("keyword", requestDto.getKeyword());
     return "redirect:list";
   }
 
