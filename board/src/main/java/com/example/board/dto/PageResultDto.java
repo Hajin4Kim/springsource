@@ -8,18 +8,15 @@ import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 // Page<Book> result 결과를 담는 Dto
 // Entity ==> Dto : result.getContent() ==> List<BookDto> 변경
-@AllArgsConstructor
-@Builder
+
 @Data
 public class PageResultDto<DTO, EN> {
 
-  // TODO: 화면에 보여줄 목록 리스트
+  // 화면에 보여줄 목록
   private List<DTO> dtoList;
 
   // 총 페이지 번호
@@ -31,7 +28,7 @@ public class PageResultDto<DTO, EN> {
   // 목록 사이즈
   private int size;
 
-  // 시작페이지, 끝페이지 번호
+  // 시작 페이지, 끝 페이지 번호
   private int start, end;
 
   // 이전, 다음 여부
@@ -53,7 +50,7 @@ public class PageResultDto<DTO, EN> {
 
   private void makePageList(Pageable pageable) {
     // 사용자가 요청한 페이지 번호
-    // TODO: Pageable PageRequest.of 에서 0 이 1페이지니까 화면에 보여줄 땐 +1 해서 보여줘야 한다.
+    // 0 이 1 page
     this.page = pageable.getPageNumber() + 1;
     this.size = pageable.getPageSize();
 
@@ -61,12 +58,13 @@ public class PageResultDto<DTO, EN> {
 
     this.start = tempEnd - 9;
     this.prev = this.start > 1;
-
     this.end = totalPage > tempEnd ? tempEnd : totalPage;
     this.next = totalPage > tempEnd;
 
-    pageList = IntStream.rangeClosed(start, end) // int 타입으로 받음
-        .boxed() // int 를 Integer 로 변환 해줌
-        .collect(Collectors.toList()); // Integer => List
+    // IntStream.rangeClosed(start, end) : int
+
+    pageList = IntStream.rangeClosed(start, end)
+        .boxed() // int ==> Integer
+        .collect(Collectors.toList());
   }
 }

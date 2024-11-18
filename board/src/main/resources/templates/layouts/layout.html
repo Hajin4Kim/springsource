@@ -23,7 +23,6 @@
       <div id="page-content-wrapper">
         <!-- Top navigation-->
         <div th:replace="~{/fragments/header::header}"></div>
-
         <!-- Page content-->
         <div class="container-fluid mt-3">
           <div layout:fragment="content"></div>
@@ -33,8 +32,8 @@
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-    <script th:src="@{js/scripts.js}"></script>
-    <!-- TODO: Custom JS-->
-    <th:block layout:fragment="script"></th:block>
+    <script th:src="@{/js/scripts.js}"></script>
+    <!-- Custom JS -->
+    <th:block layout:fragment="script"> </th:block>
   </body>
 </html>

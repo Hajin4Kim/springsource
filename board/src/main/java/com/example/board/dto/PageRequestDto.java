@@ -4,13 +4,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import groovy.transform.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-// http://localhost:8080/board/list?page=2&type=c&keyword=소년
+//  http://localhost:8080/book/list?page=2&size=20&type=c&keyword=소년
 
 @ToString
 @Builder
@@ -25,10 +25,9 @@ public class PageRequestDto {
   private String type;
   private String keyword;
 
-  public PageRequestDto() { // TODO: Default Constructor
+  public PageRequestDto() {
     this.page = 1;
     this.size = 10;
-
   }
 
   public Pageable getPageable(Sort sort) {
