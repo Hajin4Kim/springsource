@@ -99,7 +99,7 @@ public class BookController {
 
   @PostMapping("/create")
   public String postCreate(@Valid @ModelAttribute("dto") BookDto dto, BindingResult result, RedirectAttributes rttr,
-      Model model) {
+      Model model, @ModelAttribute(name = "requestDto") PageRequestDto requestDto) {
     log.info("도서 추가 요청{}", dto);
 
     List<CategoryDto> categories = bookService.getCateList();

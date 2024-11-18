@@ -14,6 +14,9 @@ public class BoardServiceTest {
   @Autowired
   private BoardService boardService;
 
+  @Autowired
+  private ReplyService replyService;
+
   @Test
   public void testList() {
 
@@ -22,5 +25,11 @@ public class BoardServiceTest {
 
     result.getDtoList().forEach(dto -> System.out.println(dto));
     System.out.println("전체 페이지 " + result.getTotalPage());
+  }
+
+  @Test
+  public void testReplyList() {
+
+    replyService.list(85L).forEach(reply -> System.out.println(reply));
   }
 }

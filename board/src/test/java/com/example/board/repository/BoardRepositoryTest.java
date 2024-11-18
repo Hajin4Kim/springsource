@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 
 import com.example.board.entity.Board;
 import com.example.board.entity.Member;
@@ -143,6 +144,7 @@ public class BoardRepositoryTest {
     System.out.println(Arrays.toString(object));
   }
 
+  @Commit
   @Transactional
   @Test
   public void testReplyRemove() {
@@ -150,4 +152,17 @@ public class BoardRepositoryTest {
     boardRepository.deleteById(1L);
   }
 
+  @Test
+  public void testReplyRemove2() {
+    // 부모 제거 시 자식(Reply) 제거
+    boardRepository.deleteById(97L); // 부모번호
+  }
+
+  @Test
+  public void testReplyList() {
+    Board board = Board.builder().bno(85L).build();
+    List<Reply> list = replyRepository.findByBoardOrderByRno(board);
+
+    list.forEach(b -> System.out.println(b));
+  }
 }
