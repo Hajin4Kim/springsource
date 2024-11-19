@@ -160,9 +160,19 @@ public class BoardRepositoryTest {
 
   @Test
   public void testReplyList() {
-    Board board = Board.builder().bno(85L).build();
+    Board board = Board.builder().bno(76L).build();
     List<Reply> list = replyRepository.findByBoardOrderByRno(board);
 
     list.forEach(b -> System.out.println(b));
+  }
+
+  @Test
+  // TODO: 댓글 수정
+  public void testReplyUpdate() {
+    Reply reply = replyRepository.findById(113L).get();
+    System.out.println("reply" + reply);
+
+    reply.setText("댓글 내용 수정");
+    System.out.println(replyRepository.save(reply));
   }
 }
