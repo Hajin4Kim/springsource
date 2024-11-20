@@ -13,6 +13,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity // TODO: 웹에 적용할 시큐리티 클래스 포함
 @Configuration // TODO: 환경설정 파일
@@ -23,10 +24,15 @@ public class SecurityConfig {
     http
         .authorizeHttpRequests(authorize -> authorize
             // TODO: "/" 경로에 대해 permission All 로 바꿈
-            .requestMatchers("/", "/sample/guest").permitAll()
+            .requestMatchers("/", "/sample/guest", "/auth").permitAll()
             .requestMatchers("/sample/member").hasRole("USER")
             .requestMatchers("/sample/admin").hasRole("ADMIN"))
-        .formLogin(Customizer.withDefaults());
+        // .formLogin(Customizer.withDefaults()); TODO: 시큐리티가 제공하는 로그인 페이지
+        // TODO: 내가 만든 로그인 페이지 띄우기
+        .formLogin(login -> login.loginPage("/member/login").permitAll())
+        .logout(logout -> logout
+            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+            .logoutSuccessUrl("/"));
 
     return http.build();
   }
@@ -43,6 +49,12 @@ public class SecurityConfig {
         .password("{bcrypt}$2a$10$t8eaMZpHy/1KwzyQ3TjGeedRhFkjrws5Cu1/Nl4mlQMaSPLr2tSB.")
         .roles("USER")
         .build();
-    return new InMemoryUserDetailsManager(user);
+
+    UserDetails admin = User.builder()
+        .username("admin")
+        .password("{bcrypt}$2a$10$t8eaMZpHy/1KwzyQ3TjGeedRhFkjrws5Cu1/Nl4mlQMaSPLr2tSB.")
+        .roles("ADMIN", "USER")
+        .build();
+    return new InMemoryUserDetailsManager(user, admin);
   }
 }
