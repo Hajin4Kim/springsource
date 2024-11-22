@@ -71,5 +71,5 @@ buildNumber.properties
 */mvnw
 */mvnw.cmd
 */.mvn/wrapper/maven-wrapper.properties
-club/src/main/resources/application-auth.properties
+club/src/main/resources/application-oauth.properties
 
