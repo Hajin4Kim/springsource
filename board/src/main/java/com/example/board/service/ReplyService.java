@@ -27,7 +27,8 @@ public interface ReplyService {
     ReplyDto dto = ReplyDto.builder()
         .rno(entity.getRno())
         .text(entity.getText())
-        .replyer(entity.getReplyer())
+        .replyerEmail(entity.getReplyer().getEmail())
+        .replyerName(entity.getReplyer().getName())
         .bno(entity.getBoard().getBno())
         .regDate(entity.getRegDate())
         .updateDate(entity.getUpdateDate())
@@ -39,11 +40,14 @@ public interface ReplyService {
   public default Reply dtoToEntity(ReplyDto dto) {
 
     Board board = Board.builder().bno(dto.getBno()).build();
+    Member member = Member.builder().email(dto.getReplyerEmail()).build();
+    // Member member2 = Member.builder().name(dto.getReplyerName()).build();
 
     Reply entity = Reply.builder()
         .rno(dto.getRno())
         .text(dto.getText())
-        .replyer(dto.getReplyer())
+        .replyer(member)
+        // .replyer(member2)
         .board(board)
         .build();
     return entity;

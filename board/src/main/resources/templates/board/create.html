@@ -3,7 +3,7 @@
   <div layout:fragment="content">
     <h2>Board Create</h2>
 
-    <form action="" method="post" th:object="${dto}">
+    <form th:action="@{/board/create}" method="post" th:object="${dto}">
       <div class="mb-3">
         <label for="title">Title</label>
         <input
@@ -17,7 +17,6 @@
           th:if="${#fields.hasErrors('title')}"
           th:errors="*{title}"
           class="text-danger"
-          th:value="${dto.title}"
         ></div>
       </div>
       <div class="mb-3">
@@ -27,6 +26,7 @@
           id="content"
           cols="30"
           class="form-control"
+          th:text="${dto.content}"
         ></textarea>
         <div
           th:if="${#fields.hasErrors('content')}"
@@ -38,22 +38,30 @@
         <label for="writer">Writer</label>
         <input
           type="text"
-          name="writerEmail"
-          id="writerEmail"
+          name="name"
+          id="name"
           class="form-control"
+          readonly
+          th:value="${#authentication.principal.memberDto.name}"
         />
+
         <div
           th:if="${#fields.hasErrors('writerEmail')}"
           th:errors="*{writerEmail}"
           class="text-danger"
-          th:value="${dto.writerEmail}"
         ></div>
       </div>
+      <input
+        type="hidden"
+        name="writerEmail"
+        th:value="${#authentication.principal.username}"
+        readonly
+      />
       <button class="btn btn-primary" type="submit">등록</button>
       <button class="btn btn-info" type="button">목록</button>
     </form>
 
-    <!--삭제 / 목록 버튼 클릭 시 사용할 폼 -->
+    <!-- 목록 버튼 클릭 시 사용할 폼 -->
     <form th:action="@{list}" method="get" id="actionForm">
       <input type="hidden" name="page" th:value="${requestDto.page}" />
       <input type="hidden" name="size" th:value="${requestDto.size}" />
@@ -63,7 +71,6 @@
   </div>
   <th:block layout:fragment="script">
     <script>
-      // List 클릭 시
       document.querySelector(".btn-info").addEventListener("click", () => {
         actionForm.submit();
       });

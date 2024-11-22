@@ -1,5 +1,6 @@
 package com.example.board.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,6 +46,8 @@ public class BoardController {
 
   }
 
+  // 로그인 사용자 == 작성자 일치하면 @PostMapping("/modify") 갈 수 있게
+  @PreAuthorize("authentication.name == #dto.writerEmail")
   @PostMapping("/modify")
   public String postModify(BoardDto dto, @ModelAttribute("requestDto") PageRequestDto requestDto,
       RedirectAttributes rttr) {
@@ -62,15 +65,14 @@ public class BoardController {
     return "redirect:/board/read";
   }
 
+  @PreAuthorize("authentication.name == #writerEmail")
   @PostMapping("/remove")
-  public String postRemove(@RequestParam Long bno, @ModelAttribute(name = "requestDto") PageRequestDto requestDto,
+  public String postRemove(Long bno, String writerEmail, @ModelAttribute("requestDto") PageRequestDto requestDto,
       RedirectAttributes rttr) {
-    log.info(" 삭제 요청 {}", bno);
-    log.info("requestDto {}", requestDto);
+    log.info("삭제 요청 {}", bno);
 
     boardService.remove(bno);
 
-    // TODO: Pagination, 검색기능 추가
     rttr.addAttribute("page", requestDto.getPage());
     rttr.addAttribute("size", requestDto.getSize());
     rttr.addAttribute("type", requestDto.getType());
@@ -78,21 +80,24 @@ public class BoardController {
     return "redirect:/board/list";
   }
 
+  @PreAuthorize("isAuthenticated()")
   @GetMapping("/create")
-  public void getCreate(@ModelAttribute(name = "dto") BoardDto dto,
-      @ModelAttribute(name = "requestDto") PageRequestDto requestDto) {
+  public void getCreate(@ModelAttribute("dto") BoardDto dto,
+      @ModelAttribute("requestDto") PageRequestDto requestDto) {
     log.info("등록 폼 요청");
   }
 
+  @PreAuthorize("isAuthenticated()")
   @PostMapping("/create")
-  public String postCreate(@Valid @ModelAttribute(name = "dto") BoardDto dto, BindingResult result,
-      @ModelAttribute(name = "requestDto") PageRequestDto requestDto, RedirectAttributes rttr) {
+  public String postCreate(@Valid @ModelAttribute("dto") BoardDto dto, BindingResult result,
+      @ModelAttribute("requestDto") PageRequestDto requestDto, RedirectAttributes rttr) {
     log.info("등록 요청 {}", dto);
 
     if (result.hasErrors()) {
       return "/board/create";
     }
-    // TODO: service
+
+    // service
     Long bno = boardService.register(dto);
 
     rttr.addAttribute("bno", bno);
@@ -100,8 +105,8 @@ public class BoardController {
     rttr.addAttribute("size", requestDto.getSize());
     rttr.addAttribute("type", requestDto.getType());
     rttr.addAttribute("keyword", requestDto.getKeyword());
-    return "redirect:/board/read";
 
+    return "redirect:/board/read";
   }
 
 }

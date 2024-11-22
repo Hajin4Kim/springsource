@@ -17,10 +17,11 @@ public class ReplyDto {
 
   private String text;
 
-  private String replyer;
+  private String replyerEmail;
+  private String replyerName; // TODO: 회원 로그인 개념 삽입으로 replyer 분활
 
   // private Board board;
-  private Long bno; // 게시글번호 (부모)
+  private Long bno; // 게시글 번호(부모)
 
   private LocalDateTime regDate;
   private LocalDateTime updateDate;
