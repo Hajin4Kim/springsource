@@ -30,17 +30,17 @@ public interface MovieService {
 
   default MovieDto entityToDto(Movie movie, List<MovieImage> movieImages, Long reviewCnt, Double reviewAvg) {
 
-    // movie => movieDto
+    // TODO: movie => movieDto
     MovieDto movieDto = MovieDto.builder()
         .mno(movie.getMno())
         .title(movie.getTitle())
         // .movieImageDtos(movieImages.get())
         .reviewCnt(reviewCnt)
-        .reviewAvg(reviewAvg)
+        .reviewAvg(reviewAvg != null ? reviewAvg : 0.0d) // TODO: nullexception 처리
         .regDate(movie.getRegDate())
         .build();
 
-    // MovieImage => MovieImageDto 변경 후 리스트 작업
+    // TODO: MovieImage => MovieImageDto 변경 후 리스트 작업
     List<MovieImageDto> movieImageDtos = movieImages.stream().map(movieImage -> {
       return MovieImageDto.builder()
           .inum(movieImage.getInum())
