@@ -3,35 +3,26 @@ package com.example.movie.dto;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
 @Data
-public class MovieImageDto {
-
-  private Long inum;
+public class UploadResultDto { // TODO: DB에 저장할 업로드된파일들
+  // uuid, fileName, floderPath
 
   private String uuid;
-
-  private String imgName;
-
-  private String path;
-
-  private LocalDateTime regDate; // 최초 생성 시간
-  private LocalDateTime updateDate; // 최종 수정 시간
+  private String fileName; // 원본파일명
+  private String folderPath; // 년/월/일
 
   public String getThumbImageURL() {
     // TODO: 썸네일 이미지 경로 리턴을 위한 메소드
     String fullPath = "";
     try {
-      fullPath = URLEncoder.encode(path + File.separator + "s_" + uuid + "_" + imgName, "utf-8");
+      fullPath = URLEncoder.encode(folderPath + File.separator + "s_" + uuid + "_" + fileName, "utf-8");
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
@@ -42,7 +33,7 @@ public class MovieImageDto {
     // TODO: 원본 이미지 경로 리턴을 위한 메소드
     String fullPath = "";
     try {
-      fullPath = URLEncoder.encode(path + File.separator + uuid + "_" + imgName, "utf-8");
+      fullPath = URLEncoder.encode(folderPath + File.separator + uuid + "_" + fileName, "utf-8");
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }

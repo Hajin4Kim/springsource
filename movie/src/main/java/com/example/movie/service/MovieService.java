@@ -1,7 +1,10 @@
 package com.example.movie.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.example.movie.dto.MovieDto;
@@ -30,7 +33,7 @@ public interface MovieService {
 
   default MovieDto entityToDto(Movie movie, List<MovieImage> movieImages, Long reviewCnt, Double reviewAvg) {
 
-    // TODO: movie => movieDto
+    // TODO: movie entity => movieDto
     MovieDto movieDto = MovieDto.builder()
         .mno(movie.getMno())
         .title(movie.getTitle())
@@ -53,7 +56,46 @@ public interface MovieService {
     return movieDto;
   }
 
+  // TODO: dto => Entity
   default Map<String, Object> dtoToEntity(MovieDto movieDto) {
-    return null;
+
+    Map<String, Object> resultMap = new HashMap<>();
+
+    Movie movie = Movie.builder()
+        .mno(movieDto.getMno())
+        .title(movieDto.getTitle())
+        .build();
+    resultMap.put("movie", movie);
+
+    List<MovieImageDto> movieImageDtos = movieDto.getMovieImageDtos();
+
+    // TODO: 1번째 방법 : MovieImageDto => MovieImage 변경 후 MovieImage 리스트 리턴
+    // List<MovieImage> movieImages = new ArrayList<>();
+    // if (movieImageDtos != null && movieImageDtos.size() > 0) {
+    // movieImageDtos.forEach(dto -> {
+    // MovieImage movieImage = MovieImage.builder()
+    // .uuid(dto.getUuid())
+    // .imgName(dto.getImgName())
+    // .path(dto.getPath())
+    // .movie(movie)
+    // .build();
+    // movieImages.add(movieImage);
+    // });
+    // }
+
+    // TODO: 2번째 방법 .stream().map().collect()
+    if (movieImageDtos != null && movieImageDtos.size() > 0) {
+      List<MovieImage> movieImages = movieImageDtos.stream().map(dto -> {
+        MovieImage movieImage = MovieImage.builder()
+            .uuid(dto.getUuid())
+            .imgName(dto.getImgName())
+            .path(dto.getPath())
+            .movie(movie)
+            .build();
+        return movieImage;
+      }).collect(Collectors.toList());
+      resultMap.put("movieImages", movieImages);
+    }
+    return resultMap;
   }
 }
