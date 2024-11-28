@@ -11,14 +11,22 @@
   </h2>
 
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-    <form th:action="@{create}" method="post" id="createForm">
+    <form th:action="@{create}" method="post" id="createForm" th:object="${movieDto}">
 
       <label class="block text-sm mt-4">
         <span class="text-gray-700 dark:text-gray-400">제목</span>
         <input
           name="title"
           class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-          placeholder="제목" />
+          placeholder="제목"
+          th:value="${movieDto.title}"
+          />
+          <!-- TODO: 에러 발생 시, class 빨강색으로 MovieDto에 @NotBlank 로 설정해둔 글씨 뜸 -->
+          <div
+          th:if="${#fields.hasErrors('title')}"
+          th:errors="*{title}"
+          class="text-danger"
+        ></div>
       </label>
       <label class="block text-sm mt-4">
         <span class="text-gray-700 dark:text-gray-400">Image Files</span>
@@ -59,6 +67,7 @@
     <!-- 리뷰 폼 영역 -->
     <th:block layout:fragment="js">
       <script th:src="@{/js/upload.js}"></script>
+      <script th:src="@{/js/create.js}"></script>
     </th:block>
   </div>
 </div>

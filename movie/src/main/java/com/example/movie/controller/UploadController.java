@@ -110,13 +110,20 @@ public class UploadController {
 
   // TODO: 업로드한 파일 이미지 띄우기
   @GetMapping("/display")
-  public ResponseEntity<byte[]> getFile(String fileName) {
+  public ResponseEntity<byte[]> getFile(String fileName, String size) { // TODO: size 변수로 썸네일용인지, 모달용인지 확인
+
     ResponseEntity<byte[]> result = null;
+
     try {
       // TODO: fileName = 내용 decode 해서 파일에 저장해줘야 한다.
       // http://localhost:8080/upload/display?fileName=2024%2F11%2F27%5Cca247bdf-671c-4ff9-9e48-7ab7c292f7ee_rebound2.jpg
       String srcFileName = URLDecoder.decode(fileName, "utf-8");
       File file = new File(uploadPath + File.separator + srcFileName);
+
+      if (size != null && size.equals("1")) {
+        // upload/2024/11/27/, =>substring 해서 원본파일명 받기
+        file = new File(file.getParent(), file.getName().substring(2));
+      }
 
       // TODO: 브라우저에 딸려보내는 코드 header
       HttpHeaders headers = new HttpHeaders();

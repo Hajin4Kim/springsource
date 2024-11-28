@@ -55,7 +55,17 @@ public class MovieImageReviewRepositoryImpl extends QuerydslRepositorySupport im
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(movie.mno.gt(0L));
 
-    // 검색
+    if (type != null && type.trim().length() != 0) {
+      // TODO: 영화명 검색
+      BooleanBuilder conditionBuilder = new BooleanBuilder();
+      if (type.contains("t")) {
+        conditionBuilder.or(movie.title.contains(keyword));
+      }
+
+      builder.and(conditionBuilder);
+    }
+
+    tuple.where(builder); // TODO: where 절 추가
 
     // Sort
     Sort sort = pageable.getSort();

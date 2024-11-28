@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.movie.dto.MovieDto;
+import com.example.movie.dto.PageRequestDto;
+import com.example.movie.dto.PageResultDto;
 
 @SpringBootTest
 public class MovieServiceTest {
@@ -26,5 +28,17 @@ public class MovieServiceTest {
      * regDate=null, updateDate=null)], reviewAvg=5.0, reviewCnt=1,
      * regDate=2024-11-26T10:16:06.583793, updateDate=null)
      */
+  }
+
+  @Test
+  public void testList() {
+    PageRequestDto requestDto = PageRequestDto.builder()
+        .page(1)
+        .size(10)
+        .type("t")
+        .keyword("량")
+        .build();
+    PageResultDto<MovieDto, Object[]> result = movieService.getList(requestDto);
+    System.out.println(result.getDtoList());
   }
 }
