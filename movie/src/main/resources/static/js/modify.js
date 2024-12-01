@@ -4,7 +4,7 @@ document.querySelector(".uploadResult").addEventListener("click", (e) => {
   if (e.target.tagName !== "I") return;
 
   // a 태그 기능 중지
-  e.preventDefault();
+  // e.preventDefault();
 
   // href 값 가져오기
   const element = e.target.closest("li"); //TODO: target 대상과 가장 가까운 부모("") 를 찾아줘
@@ -14,7 +14,7 @@ document.querySelector(".uploadResult").addEventListener("click", (e) => {
     element.remove();
   }
 
-  e.stopPropagation(); //TODO: 이벤트 전파 막는 코드
+  // e.stopPropagation(); //TODO: 이벤트 전파 막는 코드
 });
 
 //TODO: actionForm 찾은 후 action ="/movie/delete" 변경

@@ -18,38 +18,41 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-  private final ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
-  @Override
-  public List<ReviewDto> getReviews(Long mno) {
-    Movie movie = Movie.builder().mno(mno).build();
-    List<Review> result = reviewRepository.findByMovie(movie);
+    @Override
+    public List<ReviewDto> getReviews(Long mno) {
+        Movie movie = Movie.builder().mno(mno).build();
+        List<Review> result = reviewRepository.findByMovie(movie);
 
-    return result.stream().map(review -> entityToDto(review)).collect(Collectors.toList());
-  }
+        return result.stream().map(review -> entityToDto(review)).collect(Collectors.toList());
+    }
 
-  @Override
-  public ReviewDto getReview(Long reviewNo) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getReview'");
-  }
+    @Override
+    public ReviewDto getReview(Long reviewNo) {
+        return entityToDto(reviewRepository.findById(reviewNo).get());
+    }
 
-  @Override
-  public Long addReview(ReviewDto reviewDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'addReview'");
-  }
+    @Override
+    public Long addReview(ReviewDto reviewDto) {
 
-  @Override
-  public Long modifyReview(ReviewDto reviewDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'modifyReview'");
-  }
+        Review review = dtoToEntity(reviewDto);
 
-  @Override
-  public Long removeReview(Long reviewNo) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'removeReview'");
-  }
+        return reviewRepository.save(review).getReviewNo();
+    }
+
+    @Override
+    public Long modifyReview(ReviewDto reviewDto) {
+
+        Review review = reviewRepository.findById(reviewDto.getReviewNo()).get();
+        review.setText(reviewDto.getText());
+        review.setGrade(reviewDto.getGrade());
+        return reviewRepository.save(review).getReviewNo();
+    }
+
+    @Override
+    public void removeReview(Long reviewNo) {
+        reviewRepository.deleteById(reviewNo);
+    }
 
 }

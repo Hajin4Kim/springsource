@@ -2,7 +2,6 @@ package com.example.movie.service;
 
 import java.util.List;
 
-import com.example.movie.dto.MovieDto;
 import com.example.movie.dto.ReviewDto;
 import com.example.movie.entity.Member;
 import com.example.movie.entity.Movie;
@@ -23,7 +22,7 @@ public interface ReviewService {
   Long modifyReview(ReviewDto reviewDto);
 
   // 리뷰 삭제
-  Long removeReview(Long reviewNo);
+  void removeReview(Long reviewNo);
 
   default ReviewDto entityToDto(Review review) {
     // TODO: review entity => movieDto
