@@ -20,16 +20,17 @@ public class SecurityConfig {
 
     http.authorizeHttpRequests(authorize -> authorize
         .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
-        .requestMatchers("/movie/list").permitAll()
+        .requestMatchers("/movie/list", "/member/register").permitAll()
         .anyRequest().authenticated());
-    http.formLogin(login -> login.loginPage("/member/login").permitAll()
+    http.formLogin(login -> login
+        .loginPage("/member/login").permitAll()
         .defaultSuccessUrl("/movie/list"));
 
     http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+
     http.logout(logout -> logout
         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
         .logoutSuccessUrl("/"));
-
     // http.csrf(csrf -> csrf.disable());
 
     return http.build();

@@ -18,11 +18,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString(exclude = { "movieImages", "reviews" })
 @Entity
 public class Movie extends BaseEntity {
@@ -30,18 +30,16 @@ public class Movie extends BaseEntity {
   // mno (seq)
   // title
   @Id
-  @SequenceGenerator(name = "movie_seq_gen", sequenceName = "movie_seq", allocationSize = 1, initialValue = 1)
+  @SequenceGenerator(name = "movie_seq_gen", sequenceName = "movie_seq", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_seq_gen")
   private Long mno;
 
   @Column(nullable = false)
   private String title;
 
-  // TODO: CASCADE Delete 를 위한 자식에대한연관관계 추가 (양방향)
-
+  // 자식 연관관계 추가(양방향)
   // @Builder.Default
   // @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
-  // // TODO: @OneToMany 는 기본이 LAZY 타입
   // List<MovieImage> movieImages = new ArrayList<>();
 
   // @Builder.Default

@@ -3,11 +3,15 @@ package com.example.movie.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.movie.dto.MovieDto;
@@ -16,13 +20,13 @@ import com.example.movie.dto.PageResultDto;
 import com.example.movie.service.MovieService;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Log4j2
-@Controller
 @RequestMapping("/movie")
+@Controller
 public class MovieController {
 
   private final MovieService movieService;
@@ -32,6 +36,7 @@ public class MovieController {
     log.info("전체 movie list 요청 {}", pageRequestDto);
 
     PageResultDto<MovieDto, Object[]> result = movieService.getList(pageRequestDto);
+
     model.addAttribute("result", result);
   }
 
@@ -50,7 +55,6 @@ public class MovieController {
 
     log.info("영화 정보 수정 {}", movieDto);
 
-    // // 서비스
     Long mno = movieService.modify(movieDto);
 
     rttr.addAttribute("mno", mno);
@@ -61,8 +65,8 @@ public class MovieController {
     return "redirect:/movie/read";
   }
 
-  @PostMapping("/delete")
-  public String postDelete(@RequestParam Long mno, @ModelAttribute("requestDto") PageRequestDto pageRequestDto,
+  @PostMapping("/remove")
+  public String postRemove(@RequestParam Long mno, @ModelAttribute("requestDto") PageRequestDto pageRequestDto,
       RedirectAttributes rttr) {
     log.info("영화 삭제 요청 {}", mno);
 
@@ -72,24 +76,21 @@ public class MovieController {
     rttr.addAttribute("size", pageRequestDto.getSize());
     rttr.addAttribute("type", pageRequestDto.getType());
     rttr.addAttribute("keyword", pageRequestDto.getKeyword());
-
     return "redirect:/movie/list";
   }
 
   @GetMapping("/create")
-  // TODO: create 작성 페이지
   public void getCreate(MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
-    log.info("영화 작성 Create 폼 요청");
+    log.info("영화 작성 폼 요청");
   }
 
   @PostMapping("/create")
-  // TODO: 동기식으로 진행
   public String postCreate(@Valid MovieDto movieDto, BindingResult result,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto,
       RedirectAttributes rttr) {
-    log.info("영화등록 postCreate {}", movieDto);
+    log.info("영화등록 {}", movieDto);
 
-    if (result.hasErrors()) { // TODO: @Valid 의 BindingResult 가 에러가 있는지
+    if (result.hasErrors()) {
       return "/movie/create";
     }
 
@@ -102,7 +103,6 @@ public class MovieController {
     rttr.addAttribute("type", pageRequestDto.getType());
     rttr.addAttribute("keyword", pageRequestDto.getKeyword());
     return "redirect:/movie/read";
-
   }
 
 }

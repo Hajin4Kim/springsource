@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PasswordDto {
-
   private String email;
   private String currentPassword;
   private String newPassword;
-
 }

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 import com.example.movie.entity.constant.MemberRole;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,17 +17,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class MemberDto {
-
   private Long mid;
 
+  @Email
+  @NotBlank(message = "이메일은 필수 입력요소입니다")
   private String email;
-
+  @NotBlank(message = "비밀번호는 필수 입력요소입니다")
   private String password;
-
+  @NotBlank(message = "닉네임은 필수 입력요소입니다")
   private String nickname;
+
+  private boolean check;
 
   private MemberRole role;
 
-  private LocalDateTime regDate; // 최초 생성 시간
-  private LocalDateTime updateDate; // 최종 수정 시간
+  private LocalDateTime regDate;
+  private LocalDateTime updateDate;
 }

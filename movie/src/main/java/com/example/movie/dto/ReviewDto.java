@@ -19,15 +19,14 @@ public class ReviewDto {
 
   private String text;
 
-  // Movie 의 mno 담기
+  // Movie의 mno 담기
   private Long mno;
 
-  // Member mid, nickname, email
+  // Member mid,nickname,email
   private Long mid;
   private String email;
   private String nickname;
 
-  private LocalDateTime regDate; // 최초 생성 시간
-  private LocalDateTime updateDate; // 최종 수정 시간
-
+  private LocalDateTime regDate;
+  private LocalDateTime updateDate;
 }
