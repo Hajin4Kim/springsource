@@ -15,19 +15,15 @@ public interface ReviewService {
   // 특정 리뷰 조회
   ReviewDto getReview(Long reviewNo);
 
-  // 리뷰 등록
   Long addReview(ReviewDto reviewDto);
 
-  // 리뷰 수정
   Long modifyReview(ReviewDto reviewDto);
 
-  // 리뷰 삭제
   void removeReview(Long reviewNo);
 
   default ReviewDto entityToDto(Review review) {
-    // TODO: review entity => movieDto
-
-    ReviewDto reviewDto = ReviewDto.builder()
+    ReviewDto reviewDto = ReviewDto
+        .builder()
         .reviewNo(review.getReviewNo())
         .grade(review.getGrade())
         .text(review.getText())
@@ -38,11 +34,11 @@ public interface ReviewService {
         .regDate(review.getRegDate())
         .updateDate(review.getUpdateDate())
         .build();
+
     return reviewDto;
   }
 
   default Review dtoToEntity(ReviewDto reviewDto) {
-
     return Review.builder()
         .reviewNo(reviewDto.getReviewNo())
         .grade(reviewDto.getGrade())
@@ -51,5 +47,4 @@ public interface ReviewService {
         .movie(Movie.builder().mno(reviewDto.getMno()).build())
         .build();
   }
-
 }

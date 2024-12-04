@@ -47,13 +47,18 @@ const reviewLoaded = () => {
         result += `<div class="text-muted"><span class="small">${formatDate(
           review.regDate
         )}</span></div></div>`;
-        result += `<div class="d-flex flex-column align-self-center">`;
-        result += `<div class="mb-2">`;
-        result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
+
+        // 리뷰 작성자 == 로그인 사용자
+        if (review.email === loginUser) {
+          result += `<div class="d-flex flex-column align-self-center">`;
+          result += `<div class="mb-2">`;
+          result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
+          result += `</div>`;
+          result += `<div class="mb-2">`;
+          result += `<button class="btn btn-outline-success btn-sm">수정</button>`;
+          result += `</div></div>`;
+        }
         result += `</div>`;
-        result += `<div class="mb-2">`;
-        result += `<button class="btn btn-outline-success btn-sm">수정</button>`;
-        result += `</div></div></div>`;
       });
 
       // 리뷰 영역에 보여주기
@@ -70,15 +75,16 @@ reviewForm.addEventListener("submit", (e) => {
   const email = reviewForm.email.value;
   const nickname = reviewForm.nickname.value;
   const text = reviewForm.text.value;
+  const mid = reviewForm.mid.value;
 
   const review = {
     reviewNo: reviewNo,
     text: text,
-    grade: grade,
-    // mno: mno,
-    mid: 29,
-    email: "user29@naver.com",
-    nickname: "nickname29",
+    grade: grade || 0,
+    mid: mid,
+    mno: mno,
+    email: email,
+    nickname: nickname,
   };
 
   if (!reviewNo) {
@@ -86,6 +92,7 @@ reviewForm.addEventListener("submit", (e) => {
     fetch(`/reviews/${mno}`, {
       headers: {
         "content-type": "application/json",
+        "X-CSRF-TOKEN": csrfValue,
       },
       method: "post",
       body: JSON.stringify(review),
@@ -101,7 +108,9 @@ reviewForm.addEventListener("submit", (e) => {
           reviewForm.email.value = "";
           reviewForm.nickname.value = "";
           reviewForm.text.value = "";
-          reviewForm.querySelector(".starrr a:nth-child(" + grade + ")").click();
+          reviewForm
+            .querySelector(".starrr a:nth-child(" + grade + ")")
+            .click();
           reviewLoaded();
         }
       });
@@ -110,6 +119,7 @@ reviewForm.addEventListener("submit", (e) => {
     fetch(`/reviews/${mno}/${reviewNo}`, {
       headers: {
         "content-type": "application/json",
+        "X-CSRF-TOKEN": csrfValue,
       },
       method: "put",
       body: JSON.stringify(review),
@@ -125,8 +135,11 @@ reviewForm.addEventListener("submit", (e) => {
           reviewForm.email.value = "";
           reviewForm.nickname.value = "";
           reviewForm.text.value = "";
-          reviewForm.querySelector(".starrr a:nth-child(" + grade + ")").click();
-          reviewForm.querySelector(".btn-outline-danger").innerHTML = "리뷰 등록";
+          reviewForm
+            .querySelector(".starrr a:nth-child(" + grade + ")")
+            .click();
+          reviewForm.querySelector(".btn-outline-danger").innerHTML =
+            "리뷰 등록";
 
           reviewLoaded();
         }
@@ -140,12 +153,18 @@ reviewList.addEventListener("click", (e) => {
   const btn = e.target;
   // reviewNo 가져오기(data-rno 값)
   const reviewNo = btn.closest(".review-row").dataset.rno;
+  // 작성자 email
+  const email = reviewForm.email.value;
+  const form = new FormData();
+  form.append("email", email);
 
   if (btn.classList.contains("btn-outline-danger")) {
     if (!confirm("리뷰를 삭제하시겠습니까?")) return;
 
     fetch(`/reviews/${mno}/${reviewNo}`, {
       method: "delete",
+      headers: { "X-CSRF-TOKEN": csrfValue },
+      body: form,
     })
       .then((response) => response.text())
       .then((data) => {
@@ -169,7 +188,9 @@ reviewList.addEventListener("click", (e) => {
         reviewForm.nickname.value = `${data.nickname}`;
         reviewForm.text.value = `${data.text}`;
 
-        reviewForm.querySelector(".starrr a:nth-child(" + data.grade + ")").click();
+        reviewForm
+          .querySelector(".starrr a:nth-child(" + data.grade + ")")
+          .click();
 
         reviewForm.querySelector(".btn-outline-danger").innerHTML = "리뷰 수정";
       });

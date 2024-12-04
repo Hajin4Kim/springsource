@@ -45,18 +45,18 @@ public class MovieImageReviewRepositoryImpl extends QuerydslRepositorySupport im
     JPQLQuery<Double> rAvg = JPAExpressions.select(review.grade.avg().round()).from(review)
         .where(review.movie.eq(movieImage.movie));
 
-    JPQLQuery<Long> inum = JPAExpressions.select(movieImage.inum.max()).from(movieImage).groupBy(movieImage.movie);
+    JPQLQuery<Long> inum = JPAExpressions.select(movieImage.inum.max()).from(movieImage)
+        .groupBy(movieImage.movie);
 
     JPQLQuery<Tuple> tuple = query.select(movie, movieImage, rCnt, rAvg)
         .where(movieImage.inum.in(inum));
 
-    // TODO: 페이지 처리
     // bno > 0 조건
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(movie.mno.gt(0L));
 
     if (type != null && type.trim().length() != 0) {
-      // TODO: 영화명 검색
+      // 영화명 검색
       BooleanBuilder conditionBuilder = new BooleanBuilder();
       if (type.contains("t")) {
         conditionBuilder.or(movie.title.contains(keyword));
@@ -65,16 +65,15 @@ public class MovieImageReviewRepositoryImpl extends QuerydslRepositorySupport im
       builder.and(conditionBuilder);
     }
 
-    tuple.where(builder); // TODO: where 절 추가
+    tuple.where(builder);
 
     // Sort
     Sort sort = pageable.getSort();
     sort.stream().forEach(order -> {
+      // com.querydsl.core.types.Order
       Order direction = order.isAscending() ? Order.ASC : Order.DESC;
-      // sort 기준 컬럼명 가져오기
       String prop = order.getProperty();
-      // PathBuilder : Sort 객체 속성 - mno or title 이런 것들 지정
-      // order 를 어느 엔티티에 적용할 것인가?
+      // PathBuilder : Sort 객체 속성 - bno or title 이런 것들 지정
       PathBuilder<Movie> orderByExpression = new PathBuilder<>(Movie.class, "movie");
       // Sort 객체 사용 불가로 OrderSpecifier() 사용
       // com.querydsl.core.types.OrderSpecifier.OrderSpecifier(Order order, Expression
@@ -89,13 +88,12 @@ public class MovieImageReviewRepositoryImpl extends QuerydslRepositorySupport im
     List<Tuple> result = tuple.fetch();
     long count = tuple.fetchCount();
 
-    return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable, count);
-
+    return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
+        count);
   }
 
   @Override
   public List<Object[]> getMovieRow(Long mno) {
-    // TODO: read 상세조회 페이지
 
     QMovieImage movieImage = QMovieImage.movieImage;
     QReview review = QReview.review;

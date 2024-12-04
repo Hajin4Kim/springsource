@@ -52,7 +52,12 @@ public class MovieImageRepositoryTest {
     for (Object[] objects : result) {
       System.out.println(Arrays.toString(objects));
     }
+  }
 
+  @Test
+  public void testGetOldFile() {
+    List<MovieImage> oldList = movieImageRepository.findOldFileAll();
+    System.out.println(oldList);
   }
 
 }

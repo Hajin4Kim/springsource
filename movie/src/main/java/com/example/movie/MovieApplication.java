@@ -3,8 +3,10 @@ package com.example.movie;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableJpaAuditing
+@EnableScheduling // TODO: 스케쥴러를 사용 시
+@EnableJpaAuditing // TODO: BaseEntity 사용 시
 @SpringBootApplication
 public class MovieApplication {
 

@@ -17,39 +17,34 @@
     <form action="" method="get">
       <input type="text" name="name" id="">
     </form> -->
-    <!-- 파일만 따로 먼저 보내기 (form 태그 쓰지 않음) -->
+
     <input
       type="file"
       name="uploadFiles"
       id=""
       multiple
-      accept="image/png, image/jpg, image/jpeg"
+      accept="image/png, image/jpeg"
     />
     <button id="uploadBtn">업로드</button>
-
     <div id="output"></div>
     <script>
-      //TODO: 삭제 icon 누르면 삭제 요청 => 부모 이벤트
+      // x 를 누르면 삭제 요청 => 부모 이벤트
       document.querySelector("#output").addEventListener("click", (e) => {
         // a 태그 기능 중지
         e.preventDefault();
-        // icon 눌러진 태그 요소 찾기
-        console.log("e.target(실제 이벤트 대상) : ", e.target);
-        console.log(
-          "e.currentTarget(이벤트 일어난 대상의 부모) : ",
-          e.currentTarget
-        );
-
+        // x 가 눌러진 태그 요소 찾기
+        console.log("e.target(실제 이벤트 대상) ", e.target);
+        console.log("e.currentTarget(이벤트 대상의 부모) ", e.currentTarget);
         // href 값 가져오기
-        const element = e.target.closest("a"); //TODO: target 대상과 가장 가까운 부모("") 를 찾아줘
+        const element = e.target.closest("a");
         console.log(element);
-        console.log(element.href); //TODO: .href 로 찍으면 프로토콜부터 다 갖고나옴
-        console.log(element.getAttribute("href")); //TODO: 이렇게 해야 protocol 이후 부분 가져나옴
+        console.log(element.href);
+        console.log(element.getAttribute("href"));
 
-        //TODO: 화면 업로드된 썸네일삭제
+        // 이미지 삭제
         const removeDiv = e.target.closest("div");
 
-        //TODO: 삭제할 이미지 경로 추출 => 서버에 보내기
+        // 삭제 할 이미지 경로 추출
         const filePath = element.getAttribute("href");
 
         let formData = new FormData();
@@ -65,12 +60,11 @@
             return response.text();
           })
           .then((data) => {
-            //TODO: 삭제로직 진행 -> 화면 이미지까지 같이 제거
-            if (data) removeDiv.remove(); //TODO: html 태그 제거
+            // 화면 이미지 제거
+            if (data) removeDiv.remove();
           });
       });
 
-      //TODO: 업로드 한 이미지들 화면에 띄우기
       function showUploadImages(files) {
         const output = document.querySelector("#output");
 
@@ -78,7 +72,7 @@
         files.forEach((file) => {
           tags += `<div>`;
           tags += `<img src="/upload/display?fileName=${file.thumbImageURL}">`;
-          tags += `<a href="${file.imageURL}"><i class="fa-solid fa-delete-left"></i></a>`;
+          tags += `<a href="${file.imageURL}"><i class="fa-solid fa-xmark"></i></a>`;
           tags += `</div>`;
         });
         output.insertAdjacentHTML("beforeend", tags);
@@ -89,18 +83,21 @@
         const files = uploadFiles.files;
         console.log(files);
 
-        //TODO: 스크립트에서 form 작성
+        // 스크립트에서 form 작성
         let formData = new FormData();
         for (let index = 0; index < files.length; index++) {
           formData.append("uploadFiles", files[index]);
         }
+
         // for (const element of formData.keys()) {
         //   console.log(element);
         // }
+
         // for (const element of formData.values()) {
         //   console.log(element);
         // }
-        //TODO: formData 서버로 전송(ajax)
+
+        // formData 서버로 전송(ajax)
         fetch("/upload/upload", {
           method: "post",
           body: formData,
@@ -108,8 +105,7 @@
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-
-            //TODO: 업로드된 첨부 파일 화면에 출력하는 함수
+            // 첨부 파일 화면 출력
             showUploadImages(data);
           });
       });
